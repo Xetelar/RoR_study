@@ -1,5 +1,5 @@
 class Train
-  attr_accessor :speed
+  attr_reader :speed
   attr_reader :number_cars
 
   def initialize(number, type, number_cars)
@@ -10,34 +10,35 @@ class Train
     @station_index = 0
   end
 
-  def accelerate
-    @speed += 1
+  def accelerate(value)
+    @speed += value if value > 0
   end
 
-  def stop
-    self.speed = 0
+  def stop(value)
+    @speed = if value > 0
+               value
+             else
+               0
+             end
   end
 
   def add_car
-    if @speed.zero?
-      @number_cars += 1
-    end
+    @number_cars += 1 if @speed.zero?
   end
 
   def remove_car
-    if speed.zero? && @number_cars.length > 0
-      @number_cars -= 1
-    end
+    @number_cars -= 1 if speed.zero? && !@number_cars.empty?
   end
 
   def add_route(route)
     @route = route
     @station_index = 0
+    current_station.add_train(self)
   end
 
   def move_back
     unless first_station?
-      current_station.depart_train(self)
+      current_station.send_train(self)
       @station_index -= 1
       current_station.add_train(self)
     end
@@ -45,7 +46,7 @@ class Train
 
   def move_next
     unless last_station?
-      current_station.depart_train(self)
+      current_station.send_train(self)
       @station_index += 1
       current_station.add_train(self)
     end
@@ -60,9 +61,7 @@ class Train
   end
 
   def prev_station
-    if @station_index > 0
-      @route.stations[@station_index - 1]
-    end
+    @route.stations[@station_index - 1] if @station_index > 0
   end
 
   def last_station?

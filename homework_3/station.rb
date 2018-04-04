@@ -7,7 +7,7 @@ class Station
   end
 
   def add_train(train)
-    @trains << (train)
+    @trains << train
   end
 
   def send_train(train)
@@ -15,6 +15,6 @@ class Station
   end
 
   def trains_by_type(type)
-    trains.select {|train| train.type == type}
+    trains.select { |train| train.type == type }
   end
 end

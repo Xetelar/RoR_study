@@ -14,4 +14,16 @@ class Route
       @stations.delete(station)
     end
   end
+
+  def print_stations
+    puts @stations
+  end
+
+  def start_station
+    @stations.first
+  end
+
+  def finish_station
+    @stations.last
+  end
 end

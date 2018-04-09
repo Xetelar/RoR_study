@@ -1,6 +1,5 @@
 class Train
-  attr_reader :speed
-  attr_reader :number_cars
+  attr_reader :speed, :number_cars
 
   def initialize(number, type, number_cars)
     @number = number
@@ -15,8 +14,8 @@ class Train
   end
 
   def stop(value)
-    @speed = if value > 0
-               value
+    @speed = if @speed > 0
+               @speed - value
              else
                0
              end

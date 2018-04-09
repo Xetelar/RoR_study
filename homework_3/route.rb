@@ -10,9 +10,7 @@ class Route
   end
 
   def del_station(station)
-    if station != @stations[0] && station != @stations[-1]
-      @stations.delete(station)
-    end
+    @stations.delete(station) unless [@stations[0], @stations[-1]].include? station
   end
 
   def print_stations

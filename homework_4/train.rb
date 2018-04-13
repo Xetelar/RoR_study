@@ -14,15 +14,16 @@ class Train
   end
 
   def stop(value)
-    @speed = @speed > 0 ? @speed - value : 0
+    new_speed = @speed - value
+    @speed = new_speed > 0 ? new_speed : 0
   end
 
   def add_car(car)
     @cars << car if @speed.zero? && @type == car.type
   end
 
-  def remove_car(car_number)
-    @cars.delete_at(car_number) if speed.zero? && !@cars.empty?
+  def remove_car(car)
+    @cars.delete(car) if speed.zero? && !@cars.empty?
   end
 
   def add_route(route)
@@ -57,10 +58,6 @@ class Train
 
   def prev_station
     @route.stations[@station_index - 1] if @station_index > 0
-  end
-
-  def last_car_type?
-    @cars[-1].type
   end
 
   def last_station?

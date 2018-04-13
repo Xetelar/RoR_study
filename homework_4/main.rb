@@ -14,6 +14,7 @@ class Main
     @stations = []
     @trains = []
     @routes = []
+    @cars = []
   end
 
   def start
@@ -162,7 +163,7 @@ class Main
   end
 
   def choose_train
-    return create_train if trains.length.zero?
+    return create_train if @trains.length.zero?
 
     print 'Выберите поезд:'
 
@@ -173,6 +174,35 @@ class Main
     train_number = gets.to_i - 1
 
     @trains[train_number]
+  end
+
+  def choose_car
+    return create_car if @cars.length.zero?
+
+    print 'Выберите вагон:'
+
+    @cars.each_with_index do |car, i|
+      puts "#{i + 1}: #{car}"
+    end
+
+    car_number = gets.to_i - 1
+
+    cars[car_number]
+  end
+
+  def choose_car_to_train(train)
+    cars = train.cars
+    return if cars.length.zero?
+
+    print 'Выберите вагон:'
+
+    cars.each_with_index do |car, i|
+      puts "#{i + 1}: #{car}"
+    end
+
+    car_number = gets.to_i - 1
+
+    cars[car_number]
   end
 
   def add_station_to_route
@@ -198,17 +228,21 @@ class Main
 
   def add_car_to_train
     train = choose_train
-    car = create_car
-
+    car = choose_car
     train.add_car(car)
+    @cars.delete(car)
   end
 
   def del_car_from_train
     train = choose_train
-    puts 'Введите номер вагона: '
-    car_number = gets.to_i
+    car = choose_car_to_train(train)
+    if car
+      train.remove_car(car)
+      @cars << car
+    else
+      puts 'В поезде нет вагона'
+    end
 
-    train.remove_car(car_number)
   end
 
   def create_car
@@ -223,9 +257,9 @@ class Main
       break if type.zero?
       case type
       when type == 1
-        PassengerCar.new
+        @cars << PassengerCar.new
       when type == 2
-        CargoCar.new
+        @cars << CargoCar.new
       else
         puts 'Выберите тип вагона'
       end

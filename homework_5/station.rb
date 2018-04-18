@@ -1,17 +1,17 @@
 class Station
   attr_reader :trains, :name
 
-  @stantions = []
+  @@stantions = []
 
   def self.all
-    @stantions
+    @@stantions
   end
 
   def initialize(name)
     @name = name
     @trains = []
 
-    @stantions << self
+    @@stantions << self
   end
 
   def add_train(train)

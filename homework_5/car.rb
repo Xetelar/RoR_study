@@ -1,7 +1,7 @@
 class Car
-  attr_reader :type
-
   include CompanyAccessor
+
+  attr_reader :type
 
   def initialize(type)
     @type = type

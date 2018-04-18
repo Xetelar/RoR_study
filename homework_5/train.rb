@@ -1,14 +1,17 @@
+require_relative 'instance_counter.rb'
+require_relative 'company_accessor.rb'
+
 class Train
-  attr_reader :speed, :cars
-
-  @trains = []
-
-  def self.find(number)
-    @trains.find { |train| train.number == number }
-  end
-
   include CompanyAccessor
   include InstanceCounter
+
+  attr_reader :speed, :cars
+
+  @@trains = Hash.new(nil)
+
+  def self.find(number)
+    @@trains[number.to_sym]
+  end
 
   def initialize(number, type)
     @number = number
@@ -17,7 +20,9 @@ class Train
     @speed = 0
     @station_index = 0
 
-    @trains << self
+    @@trains[number.to_sym] = self
+
+    register_instance
   end
 
   def accelerate(value)

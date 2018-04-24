@@ -1,9 +1,11 @@
 require_relative 'instance_counter.rb'
 require_relative 'company_accessor.rb'
+require_relative 'validator.rb'
 
 class Train
   include CompanyAccessor
   include InstanceCounter
+  include Validator
 
   attr_reader :speed, :cars
 
@@ -89,17 +91,10 @@ class Train
     current_station == @route.stations[0]
   end
 
-  def valid?
-    validate!
-  rescue
-    retry
-  end
-
   protected
 
   def validate!
     raise 'Не правильный номер поезда' if @number !~ NUMBER_FORMAT
     raise 'Не правильный тип поезда' if @type !~ TYPE_FORMAT
-    true
   end
 end

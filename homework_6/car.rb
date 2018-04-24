@@ -1,5 +1,6 @@
 class Car
   include CompanyAccessor
+  include Validator
 
   attr_reader :type
 
@@ -11,16 +12,9 @@ class Car
     validate!
   end
 
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
   protected
 
   def validate!
     raise 'Не правильный тип вагона' if type !~ TYPE_FORMAT
-    true
   end
 end

@@ -1,5 +1,6 @@
 class Station
   include InstanceCounter
+  include Validator
 
   attr_reader :trains, :name
 
@@ -32,16 +33,9 @@ class Station
     trains.select { |train| train.type == type }
   end
 
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
   protected
 
   def validate!
     raise 'Не правильный имя' if name !~ NAME_FORMAT
-    true
   end
 end

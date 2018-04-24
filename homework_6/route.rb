@@ -1,10 +1,12 @@
 class Route
   include InstanceCounter
+  include Validator
 
   attr_reader :stations
 
   def initialize(start_station, finish_station)
     @stations = [start_station, finish_station]
+    validate!
   end
 
   def add_station(station)
@@ -25,5 +27,12 @@ class Route
 
   def finish_station
     @stations.last
+  end
+
+  def validate!
+    @stations.each do |station|
+      raise "Введенный объект не является объктом класса Station" unless station.is_a? Station
+    end
+    raise "Начальная и конечная станции не могут совпадать" if start_station == finish_station
   end
 end

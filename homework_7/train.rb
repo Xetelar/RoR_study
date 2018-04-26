@@ -98,7 +98,7 @@ class Train
     raise 'Не правильный тип поезда' if @type !~ TYPE_FORMAT
   end
 
-  def each_cars
-    @cars.each { |car| yield(car) }
+  def each_car
+    @cars.each_with_index { |car, i| yield(car, i) }
   end
 end

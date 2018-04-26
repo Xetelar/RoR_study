@@ -36,6 +36,7 @@ class Main
         10 - Переместить поезд назад по маршруту
         11 - Посмотреть список станций
         12 - Посмотреть список поездов на станции
+        13 - Посмотреть список вагонов у поезда
         0  - Выход"
       command = gets.to_i
 
@@ -86,6 +87,9 @@ class Main
 
     when 12
       show_list_of_trains_on_station
+
+    when 13
+      show_list_of_cars_of_train
 
     else
       puts 'Введите число от 0 до 12'
@@ -289,13 +293,17 @@ class Main
   def show_list_of_trains_on_station
     station = choose_station
 
-    station.each_trains { |train| puts train }
+    station.each_train do |train|
+      puts "Поезд номер #{train.number} имеет: тип - #{train.type}, кол-во вагонов - #{train.cars.length}"
+    end
   end
 
-  def show_list_of_car_of_train
+  def show_list_of_cars_of_train
     train = choose_train
 
-    train.each_cars { |car| puts car }
+    train.each_car do |car, i|
+      puts "Вагон номер #{i + 1} имеет: тип - #{car.type}, занято #{car.volue}, свободно #{car.taken}"
+    end
   end
 
   def set_car_volume

@@ -11,7 +11,6 @@ class Car
     @type = type
     @volume = volume
     @taken = 0
-
     validate!
   end
 

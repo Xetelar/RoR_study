@@ -1,7 +1,3 @@
-require_relative 'instance_counter.rb'
-require_relative 'company_accessor.rb'
-require_relative 'validator.rb'
-
 class Train
   include CompanyAccessor
   include InstanceCounter
@@ -24,11 +20,8 @@ class Train
     @cars = []
     @speed = 0
     @station_index = 0
-
     validate!
-
     @@trains[number] = self
-
     register_instance
   end
 
@@ -56,19 +49,17 @@ class Train
   end
 
   def move_back
-    unless first_station?
-      current_station.send_train(self)
-      @station_index -= 1
-      current_station.add_train(self)
-    end
+    return if first_station?
+    current_station.send_train(self)
+    @station_index -= 1
+    current_station.add_train(self)
   end
 
   def move_next
-    unless last_station?
-      current_station.send_train(self)
-      @station_index += 1
-      current_station.add_train(self)
-    end
+    return if last_station?
+    current_station.send_train(self)
+    @station_index += 1
+    current_station.add_train(self)
   end
 
   def next_station

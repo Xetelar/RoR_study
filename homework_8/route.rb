@@ -14,7 +14,8 @@ class Route
   end
 
   def del_station(station)
-    @stations.delete(station) unless [@stations[0], @stations[-1]].include? station
+    stations_include = [@stations[0], @stations[-1]].include? station
+    @stations.delete(station) unless stations_include
   end
 
   def print_stations
@@ -31,12 +32,10 @@ class Route
 
   def validate!
     @stations.each do |station|
-      unless station.is_a? Station
-        raise 'Введенный объект не является объктом класса Station'
-      end
+      break if station.is_a? Station
+      raise 'Введенный объект не является объктом класса Station'
     end
-    if start_station == finish_station
-      raise 'Начальная и конечная станции не могут совпадать'
-    end
+    return unless start_station == finish_station
+    raise 'Начальная и конечная станции не могут совпадать'
   end
 end

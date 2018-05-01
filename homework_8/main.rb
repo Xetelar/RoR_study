@@ -1,6 +1,6 @@
 require_relative 'instance_counter.rb'
 require_relative 'company_accessor.rb'
-
+require_relative 'validator.rb'
 require_relative 'station.rb'
 require_relative 'route.rb'
 require_relative 'train.rb'
@@ -39,16 +39,15 @@ class Main
         13 - Посмотреть список вагонов у поезда
         0  - Выход"
       command = gets.to_i
-
       break if command.zero?
-
       case_command(command)
     end
   end
 
   protected
 
-  # Все методы вынес в protected чтобы пользователь не мог менять менять параметры напрямую, не используя меню
+  # Все методы вынес в protected чтобы пользователь не мог
+  # менять менять параметры напрямую, не используя меню
 
   def case_command(command)
     case command
@@ -65,7 +64,7 @@ class Main
     when 6
       add_route_to_train
     when 7
-      c
+      add_car_to_train
     when 8
       del_car_from_train
     when 9
@@ -86,7 +85,6 @@ class Main
   def create_station
     puts 'Введите название станции: '
     name = gets.chomp
-
     if @stations.find { |station| station.name == name }
       puts 'Станция уже существует'
     else
@@ -97,123 +95,94 @@ class Main
   end
 
   def create_train
-    begin
-      puts 'Введите номер поезда'
-      number = gets.chomp
-      puts 'Выберите тип поезда:
+    puts 'Введите номер поезда'
+    number = gets.chomp
+    puts 'Выберите тип поезда:
           1 - Пассажирский
           2 - Грузовой'
-      type = gets.to_i
-
-      types = %w[passenger cargo]
-
-
-      Train.new(number, types[type - 1])
-
-      puts 'Поед успешно создан'
-    rescue RuntimeError => e
-      puts e
-      retry
-    end
+    type = gets.to_i
+    types = %w[passenger cargo]
+    Train.new(number, types[type - 1])
+    puts 'Поед успешно создан'
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def create_route
     start_station = choose_station
     finish_station = choose_station
-
     route = Route.new(start_station, finish_station)
     @routes << route
-
     route
   end
 
   def choose_station
     return create_station if @stations.length.zero?
-
     puts 'Выберите станцию: '
     @stations.each_with_index do |station, i|
       puts "#{i + 1}: #{station.name}"
     end
-
     station_number = gets.to_i - 1
-
     @stations[station_number]
   end
 
   def choose_route
     return create_route if @routes.length.zero?
-
     print 'Выберите маршрут:'
     @routes.each_with_index do |route, i|
       puts "#{i + 1}: #{route.start_station} - #{route.finish_station}"
     end
-
     route_number = gets.to_i - 1
-
     @routes[route_number]
   end
 
   def choose_train
     return create_train if @trains.length.zero?
-
     print 'Выберите поезд:'
-
     @trains.each_with_index do |train, i|
       puts "#{i + 1}: #{train.number}"
     end
-
     train_number = gets.to_i - 1
-
     @trains[train_number]
   end
 
   def choose_car
     return create_car if @cars.length.zero?
-
     print 'Выберите вагон:'
-
     @cars.each_with_index do |car, i|
       puts "#{i + 1}: #{car}"
     end
-
     car_number = gets.to_i - 1
-
     cars[car_number]
   end
 
   def choose_car_to_train(train)
     cars = train.cars
     return if cars.length.zero?
-
     print 'Выберите вагон:'
-
     cars.each_with_index do |car, i|
       puts "#{i + 1}: #{car}"
     end
-
     car_number = gets.to_i - 1
-
     cars[car_number]
   end
 
   def add_station_to_route
     station = choose_station
     route = choose_route
-
     route.add_station(station)
   end
 
   def del_station_to_route
     station = choose_station
     route = choose_route
-
     route.delete(station)
   end
 
   def add_route_to_train
     train = choose_train
     route = choose_route
-
     train.add_route(route)
   end
 
@@ -233,7 +202,6 @@ class Main
     else
       puts 'В поезде нет вагона'
     end
-
   end
 
   def create_car
@@ -242,13 +210,9 @@ class Main
           1 - Пассажирский
           2 - Грузовой
           0 - Выход'
-
       type = gets.to_i
-
       puts 'Введите кол-во мест/объем вагона'
-
       number = gets.to_i
-
       break if type.zero?
       case type
       when type == 1
@@ -263,13 +227,11 @@ class Main
 
   def train_move_next
     train = choose_train
-
     train.move_next
   end
 
   def train_move_back
     train = choose_train
-
     train.move_back
   end
 
@@ -279,17 +241,15 @@ class Main
 
   def show_list_of_trains_on_station
     station = choose_station
-
     station.each_train do |train|
-      puts "Поезд номер #{train.number} имеет: тип - #{train.type}, кол-во вагонов - #{train.cars.length}"
+      puts train_string(train)
     end
   end
 
   def show_list_of_cars_of_train
     train = choose_train
-
     train.each_car do |car, i|
-      puts "Вагон номер #{i + 1} имеет: тип - #{car.type}, занято #{car.volue}, свободно #{car.taken}"
+      puts car_string(car, i)
     end
   end
 
@@ -298,6 +258,18 @@ class Main
     volume = gets.chomp
     car = choose_car
     car.add_volume(volume)
+  end
+
+  private
+
+  def train_string(train)
+    "Поезд номер #{train.cars.length} имеет: тип - #{train.type},
+    кол-во вагонов - #{train.number}"
+  end
+
+  def car_string(car, number)
+    "Вагон номер #{number + 1} имеет: тип - #{car.type},
+    занято #{car.volue}, свободно #{car.taken}"
   end
 end
 

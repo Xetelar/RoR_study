@@ -115,6 +115,9 @@ class Main
     route = Route.new(start_station, finish_station)
     @routes << route
     route
+  rescue RuntimeError => e
+    puts e
+    retry
   end
 
   def choose_station

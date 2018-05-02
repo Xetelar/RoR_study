@@ -34,7 +34,7 @@ class Station
   protected
 
   def validate!
-    raise 'Не правильный имя' if name !~ NAME_FORMAT
+    raise 'Не правильное имя станции' if name !~ NAME_FORMAT
   end
 
   def each_train

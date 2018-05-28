@@ -5,25 +5,25 @@ module Validation
   end
 
   module ClassMethods
-    attr_reader :validation_rules
+    attr_reader :validation_types
 
     def validate(attr_name, validation_type, param = nil)
-      @validation_rules ||= []
-      @validation_rules << { attr_name: attr_name, rule: validation_type, param: param }
+      @validation_types ||= []
+      @validation_types << { attr_name: attr_name, type: validation_type, param: param }
     end
   end
 
   module InstanceMethods
     def validate!
-      self.class.validation_rules.each do |rule|
-        name_value = instance_variable_get("@#{rule[:attr_name]}")
-        send rule[:rule], name_value, rule[:param]
+      self.class.validation_types.each do |type|
+        attr_value = instance_variable_get("@#{type[:attr_name]}")
+        send type[:type], attr_value, type[:param]
       end
-      true
     end
 
     def valid?
       validate!
+      true
     rescue StandardError
       false
     end

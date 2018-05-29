@@ -3,6 +3,8 @@ class Train
   include InstanceCounter
   include Validation
 
+  extend Accessors
+
   attr_reader :speed, :cars
 
   @@trains = {}

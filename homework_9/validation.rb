@@ -15,9 +15,9 @@ module Validation
 
   module InstanceMethods
     def validate!
-      self.class.validations.each do |type|
-        attr_value = instance_variable_get("@#{type[:name]}")
-        send type[:type], attr_value, type[:param]
+      self.class.validations.each do |validation|
+        attr_value = instance_variable_get("@#{validation[:name]}")
+        send validation[:type], attr_value, validation[:param]
       end
     end
 

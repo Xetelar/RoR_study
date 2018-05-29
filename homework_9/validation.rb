@@ -5,18 +5,18 @@ module Validation
   end
 
   module ClassMethods
-    attr_reader :validation_types
+    attr_reader :validations
 
-    def validate(attr_name, validation_type, param = nil)
-      @validation_types ||= []
-      @validation_types << { attr_name: attr_name, type: validation_type, param: param }
+    def validate(name, validation_type, param = nil)
+      @validations ||= []
+      @validations << { name: name, type: validation_type, param: param }
     end
   end
 
   module InstanceMethods
     def validate!
-      self.class.validation_types.each do |type|
-        attr_value = instance_variable_get("@#{type[:attr_name]}")
+      self.class.validations.each do |type|
+        attr_value = instance_variable_get("@#{type[:name]}")
         send type[:type], attr_value, type[:param]
       end
     end

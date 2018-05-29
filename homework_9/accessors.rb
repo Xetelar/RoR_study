@@ -1,16 +1,17 @@
 module Accessors
-  attr_reader :names
-
   def attr_accessor_with_history(*names)
     names.each do |name|
       var_name = "@#{name}".to_sym
-      names = []
+      attr_history = "@#{name}_history".to_sym
       define_method(name) { instance_variable_get(var_name) }
       define_method("#{name}=".to_sym) do |value|
+        arr_values = instance_variable_get(attr_history) || []
+        instance_variable_set(attr_history, arr_values << instance_variable_get(var_name))
         instance_variable_set(var_name, value)
-        names << var_name unless var_name.empty?
       end
-      define_method("#{name}_history") { names }
+      define_method("#{name}_history".to_sym) do
+        instance_variable_get(attr_history)
+      end
     end
   end
 
@@ -19,7 +20,7 @@ module Accessors
     define_method(name) { instance_variable_get(var_name) }
 
     define_method("#{name}=".to_sym) do |value|
-      raise 'Неправильный класс' if value.instance_of? class_name
+      raise 'Неправильный класс' unless value.instance_of? class_name
       instance_variable_set(var_name, value)
     end
   end
